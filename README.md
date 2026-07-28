@@ -64,52 +64,109 @@ python src/main.py
 
 ## 🧠 ¿Cómo funciona?
 
-<div align="center">
+### Arquitectura del sistema
 
-```
-┌─────────────┐       ┌──────────────────┐       ┌─────────────────┐       ┌────────────┐
-│             │       │                  │       │                 │       │            │
-│   CÁMARA    │──────►│    DETECTOR      │──────►│    TRACKER      │──────►│     UI     │
-│             │       │                  │       │                 │       │            │
-│  Captura    │       │  Encuentra las   │       │  Decide quién   │       │  Dibuja    │
-│  imagen     │       │  caras y genera  │       │  es quién       │       │  todo en   │
-│  30 veces   │       │  una "huella"    │       │  comparando     │       │  pantalla  │
-│  por segundo│       │  única de 512    │       │  huellas y      │       │            │
-│             │       │  números por     │       │  posiciones     │       │            │
-│             │       │  cada rostro     │       │                 │       │            │
-└─────────────┘       └──────────────────┘       └────────┬────────┘       └────────────┘
-                                                          │
-                                                          │
-                              ┌────────────────────────────┼────────────────────────────┐
-                              │                            │                            │
-                              ▼                            ▼                            ▼
-                    ┌──────────────────┐       ┌──────────────────┐       ┌──────────────────┐
-                    │                  │       │                  │       │                  │
-                    │    REGISTRO      │       │    HISTORIAL     │       │    CAPTURAS      │
-                    │                  │       │                  │       │                  │
-                    │  ¿Tiene nombre?  │       │  Anota a qué     │       │  Guarda fotos    │
-                    │  Si ya lo vi     │       │  hora llegó y    │       │  cuando el       │
-                    │  antes, lo       │       │  a qué hora se   │       │  usuario lo      │
-                    │  llamo por       │       │  fue cada        │       │  pide            │
-                    │  su nombre       │       │  persona         │       │                  │
-                    │                  │       │                  │       │                  │
-                    └──────────────────┘       └──────────────────┘       └──────────────────┘
-```
+```mermaid
+flowchart LR
+    subgraph ENTRADA
+        CAM[🎥 Cámara]
+    end
 
-</div>
+    subgraph PROCESAMIENTO
+        DET[🧠 Detector\nInsightFace\nRetinaFace + ArcFace]
+        TRK[🔍 Tracker\nAsociación espacial\n+ comparación de huellas]
+    end
 
-### La "huella facial" explicada simple
+    subgraph SALIDA
+        UI[🎨 Interfaz\nRecuadros + Panel\n+ HUD + Reloj]
+    end
 
-Cada rostro se convierte en **512 números**. Es como un código de barras de tu cara:
+    subgraph DATOS
+        REG[📝 Registro\nNombres guardados\nen disco]
+        HIS[📊 Historial\nCSV con entrada\nsalida y duración]
+        CAP[📷 Capturas\nFotos con\nfecha y hora]
+    end
 
-```
-Tu cara:           [0.12, -0.45, 0.78, 0.33, -0.91, ...]  → 512 valores
-Tu cara (otra foto): [0.11, -0.44, 0.77, 0.34, -0.90, ...]  → Casi iguales ✓
-
-Otra persona:      [0.89, 0.23, -0.56, 0.11, 0.67, ...]  → Muy diferente ✗
+    CAM -->|frame| DET
+    DET -->|rostros + huellas| TRK
+    TRK -->|personas identificadas| UI
+    TRK --> REG
+    TRK --> HIS
+    TRK --> CAP
 ```
 
-Dos fotos tuyas siempre dan números parecidos. Otra persona siempre da números diferentes. Así el sistema sabe quién es quién.
+### Flujo de reconocimiento (lo que pasa en cada frame)
+
+```mermaid
+flowchart TD
+    A[📷 Nuevo frame de la cámara] --> B{¿Hay caras?}
+    
+    B -->|No| Z[Mostrar: Buscando rostros...]
+    B -->|Sí| C[Generar huella facial\n512 números únicos por cara]
+    
+    C --> D{¿La huella coincide\ncon alguien conocido?}
+    
+    D -->|Sí, está cerca| E[✅ Misma persona\nActualizar posición]
+    D -->|Sí, pero se había ido| F[🔄 Reapareció\nMisma persona volvió]
+    D -->|No coincide con nadie| G[🆕 Persona nueva\nAsignar nuevo ID y color]
+    
+    E --> H[Dibujar en pantalla]
+    F --> H
+    G --> H
+    
+    H --> I[Mostrar: nombre/ID + edad + género\n+ recuadro de color + panel lateral]
+```
+
+### ¿Cómo diferencia personas?
+
+```mermaid
+flowchart LR
+    subgraph "Persona A (tú)"
+        A1[Foto 1] -->|genera| AV1["[0.12, -0.45, 0.78, ...]"]
+        A2[Foto 2] -->|genera| AV2["[0.11, -0.44, 0.77, ...]"]
+    end
+    
+    subgraph "Persona B (otro)"
+        B1[Foto 1] -->|genera| BV1["[0.89, 0.23, -0.56, ...]"]
+    end
+
+    AV1 <-->|"Similitud: 0.92 ✅\n(Son la misma persona)"| AV2
+    AV1 <-->|"Similitud: 0.15 ❌\n(Son personas distintas)"| BV1
+```
+
+Cada rostro se convierte en **512 números** — una "huella facial" única. Dos fotos tuyas siempre dan vectores parecidos. Otra persona da vectores completamente diferentes. Así el sistema distingue quién es quién sin equivocarse.
+
+### Módulos del proyecto
+
+```mermaid
+graph TD
+    MAIN[🚀 main.py\nOrquestador principal\nCLI + bucle de la app] --> DET
+    MAIN --> TRK
+    MAIN --> UI
+    MAIN --> CAP
+    MAIN --> CFG
+
+    DET[🧠 detector.py\nInsightFace + Threading\nEmbeddings 512D]
+    TRK[🔍 tracker.py\nTracking espacial\nRe-identificación\nAlertas]
+    UI[🎨 ui.py\nHUD + Panel + Reloj\nTemas + Alertas]
+    CAP[📷 capturas.py\nFotos con timestamp\nScreenshots]
+    REG[📝 registro.py\nNombres persistentes\nBúsqueda por huella]
+    HIS[📊 historial.py\nLog CSV presencia]
+    CFG[⚙️ config.py\nToda la configuración]
+
+    TRK --> REG
+    TRK --> HIS
+    MAIN --> HIS
+
+    style MAIN fill:#2d5016,color:#fff
+    style DET fill:#1a3a5c,color:#fff
+    style TRK fill:#5c1a3a,color:#fff
+    style UI fill:#3a5c1a,color:#fff
+    style CAP fill:#5c3a1a,color:#fff
+    style REG fill:#1a5c5c,color:#fff
+    style HIS fill:#5c5c1a,color:#fff
+    style CFG fill:#3a1a5c,color:#fff
+```
 
 ---
 
