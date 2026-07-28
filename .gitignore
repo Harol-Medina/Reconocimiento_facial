@@ -1,0 +1,27 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Datos generados (se crean automáticamente)
+datos/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Sistema
+Thumbs.db
+.DS_Store
+
+# Videos y capturas
+*.avi
+*.mp4
