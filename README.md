@@ -1,310 +1,314 @@
-# Reconocimiento Facial en Tiempo Real
+<div align="center">
 
-Un sistema que abre tu cámara y reconoce caras automáticamente. Si hay 2 personas frente a la cámara, las diferencia. Si alguien se va y vuelve, lo reconoce. Puedes asignarle nombres y la próxima vez que aparezcan, los llama por su nombre.
+# 🎯 Reconocimiento Facial en Tiempo Real
 
-No necesitas tomarle fotos antes, no necesitas entrenar nada. Solo abres la app y funciona.
+**Sistema inteligente que detecta, diferencia y reconoce múltiples personas en vivo usando inteligencia artificial.**
 
----
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.10%2B-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org)
+[![InsightFace](https://img.shields.io/badge/InsightFace-ArcFace_512D-FF6F00?style=for-the-badge)](https://insightface.ai)
+[![ONNX](https://img.shields.io/badge/ONNX_Runtime-1.17%2B-7B1FA2?style=for-the-badge)](https://onnxruntime.ai)
 
-## Qué puede hacer
+<br>
 
-- Detectar todas las caras que aparezcan frente a la cámara
-- Diferenciar personas automáticamente (Persona 1, Persona 2, etc.)
-- Reconocer si alguien sale del cuadro y vuelve a entrar
-- Estimar edad y género de cada persona
-- Guardar capturas de rostros con fecha y hora
-- Asignar nombres que se guardan para siempre (la próxima sesión los recuerda)
-- Llevar un historial en CSV de quién estuvo, cuándo llegó y cuándo se fue
-- Grabar video
-- Panel lateral con miniaturas de cada persona en vivo
+*Abre la cámara → detecta caras → las diferencia automáticamente → sin registro previo*
 
 ---
 
-## Cómo se ve cuando corre
+</div>
 
-Cuando ejecutas la app se abre una ventana con la cámara. Cada persona tiene:
-- Un recuadro de color único con esquinas estilizadas
-- Su nombre o ID arriba del recuadro
-- Edad y género estimados
-- Una barra que indica cuánto tiempo lleva en pantalla
-- Un panel a la derecha con miniaturas de todos
+## 📌 ¿Qué es esto?
 
-Arriba hay un HUD con: personas activas, total vistas, cuadros por segundo y un reloj.
+Un programa que al abrirlo enciende tu cámara web y automáticamente:
 
----
+1. **Detecta** todas las caras que aparezcan
+2. **Diferencia** quién es quién (Persona 1, Persona 2, etc.)
+3. **Recuerda** — si alguien se va y vuelve, lo reconoce
+4. **Aprende nombres** — le asignas un nombre y lo recuerda para siempre
 
-## Requisitos para que funcione
-
-- **Python 3.9 o superior** (probado con 3.14)
-- **Una cámara web** conectada
-- **Internet** solo la primera vez (descarga el modelo de IA, pesa ~280MB)
-- **Windows, Linux o Mac**
+No necesitas tomarle fotos antes. No necesitas entrenar nada. Solo ejecutas y funciona.
 
 ---
 
-## Instalación paso a paso
+## ⚡ Inicio rápido
 
-### 1. Instalar las dependencias
-
-Abre una terminal en la carpeta del proyecto y ejecuta:
-
-```
+```bash
+# 1. Instalar dependencias
 pip install -r requirements.txt
-```
 
-Eso instala 4 paquetes:
-
-| Paquete | Qué hace |
-|---------|----------|
-| `opencv-python` | Abre la cámara y dibuja la interfaz |
-| `insightface` | El cerebro: detecta caras y genera la "huella facial" de cada persona |
-| `onnxruntime` | Ejecuta los modelos de inteligencia artificial de forma rápida |
-| `numpy` | Hace los cálculos matemáticos de comparación de rostros |
-
-> No necesitas CMake, no necesitas compilar nada, no necesitas Visual Studio. Se instala directo.
-
-### 2. Ejecutar
-
-```
+# 2. Ejecutar
 python src/main.py
 ```
 
-La primera vez tarda unos segundos extra porque descarga el modelo de IA (~280MB). Se guarda en tu carpeta de usuario y no se vuelve a descargar.
+> 💡 La primera ejecución descarga el modelo de IA (~280MB). Solo pasa una vez.
 
 ---
 
-## Controles
+## 🎮 Controles
 
-Todo se controla con teclas mientras la ventana de la cámara está abierta:
+<div align="center">
 
-| Tecla | Qué hace |
-|:-----:|----------|
-| `C` | Captura el rostro de cada persona visible y lo guarda como imagen con fecha/hora |
-| `S` | Toma un screenshot de toda la pantalla tal como se ve |
-| `N` | Te pide un nombre en la terminal y se lo asigna a la persona (se guarda para siempre) |
-| `G` | Empieza o detiene la grabación de video |
-| `T` | Cambia entre tema oscuro y tema claro |
-| `R` | Resetea: olvida a todas las personas de esta sesión |
-| `Q` | Cierra la app |
+| Tecla | Acción | Detalle |
+|:-----:|--------|---------|
+| `C` | 📷 Capturar | Guarda foto recortada de cada rostro con fecha y hora |
+| `S` | 🖼️ Screenshot | Guarda la pantalla completa tal como se ve |
+| `N` | ✏️ Nombrar | Asigna un nombre a la persona (se guarda permanentemente) |
+| `G` | 🎬 Grabar | Inicia o detiene grabación de video |
+| `T` | 🎨 Tema | Alterna entre interfaz oscura y clara |
+| `R` | 🔄 Reset | Olvida a todas las personas de esta sesión |
+| `Q` | ❌ Salir | Cierra la aplicación |
 
----
-
-## Opciones avanzadas (línea de comandos)
-
-Si quieres personalizar algo al ejecutar:
-
-```
-python src/main.py --camera 1          # Usar otra cámara
-python src/main.py --tema claro        # Empezar con tema claro
-python src/main.py --no-panel          # Sin el panel lateral
-python src/main.py --ancho 1280 --alto 720   # Resolución HD
-python src/main.py --threshold 0.5     # Más estricto al diferenciar personas
-```
-
-Para ver todas las opciones:
-
-```
-python src/main.py --help
-```
+</div>
 
 ---
 
-## Dónde se guardan las cosas
+## 🧠 ¿Cómo funciona?
 
-Todo se guarda automáticamente en una carpeta `datos/` que se crea sola:
+<div align="center">
 
 ```
-datos/
-├── capturas/       ← Fotos de rostros cuando presionas C
-├── registro/       ← Los nombres que asignas (se mantienen entre sesiones)
-├── historial/      ← CSV con hora de entrada, salida y duración de cada persona
-└── grabaciones/    ← Videos cuando presionas G
+┌─────────────┐       ┌──────────────────┐       ┌─────────────────┐       ┌────────────┐
+│             │       │                  │       │                 │       │            │
+│   CÁMARA    │──────►│    DETECTOR      │──────►│    TRACKER      │──────►│     UI     │
+│             │       │                  │       │                 │       │            │
+│  Captura    │       │  Encuentra las   │       │  Decide quién   │       │  Dibuja    │
+│  imagen     │       │  caras y genera  │       │  es quién       │       │  todo en   │
+│  30 veces   │       │  una "huella"    │       │  comparando     │       │  pantalla  │
+│  por segundo│       │  única de 512    │       │  huellas y      │       │            │
+│             │       │  números por     │       │  posiciones     │       │            │
+│             │       │  cada rostro     │       │                 │       │            │
+└─────────────┘       └──────────────────┘       └────────┬────────┘       └────────────┘
+                                                          │
+                                                          │
+                              ┌────────────────────────────┼────────────────────────────┐
+                              │                            │                            │
+                              ▼                            ▼                            ▼
+                    ┌──────────────────┐       ┌──────────────────┐       ┌──────────────────┐
+                    │                  │       │                  │       │                  │
+                    │    REGISTRO      │       │    HISTORIAL     │       │    CAPTURAS      │
+                    │                  │       │                  │       │                  │
+                    │  ¿Tiene nombre?  │       │  Anota a qué     │       │  Guarda fotos    │
+                    │  Si ya lo vi     │       │  hora llegó y    │       │  cuando el       │
+                    │  antes, lo       │       │  a qué hora se   │       │  usuario lo      │
+                    │  llamo por       │       │  fue cada        │       │  pide            │
+                    │  su nombre       │       │  persona         │       │                  │
+                    │                  │       │                  │       │                  │
+                    └──────────────────┘       └──────────────────┘       └──────────────────┘
 ```
+
+</div>
+
+### La "huella facial" explicada simple
+
+Cada rostro se convierte en **512 números**. Es como un código de barras de tu cara:
+
+```
+Tu cara:           [0.12, -0.45, 0.78, 0.33, -0.91, ...]  → 512 valores
+Tu cara (otra foto): [0.11, -0.44, 0.77, 0.34, -0.90, ...]  → Casi iguales ✓
+
+Otra persona:      [0.89, 0.23, -0.56, 0.11, 0.67, ...]  → Muy diferente ✗
+```
+
+Dos fotos tuyas siempre dan números parecidos. Otra persona siempre da números diferentes. Así el sistema sabe quién es quién.
 
 ---
 
-## Estructura del proyecto
+## 📁 Estructura del proyecto
 
 ```
 Reconocimiento_facial/
 │
-├── 📁 src/                        ← Código fuente
-│   ├── 🚀 main.py                ← Punto de entrada (ejecuta esto)
-│   ├── 🧠 detector.py            ← Motor de IA: detecta caras + huella facial
-│   ├── 🔍 tracker.py             ← Seguimiento: sabe quién es quién entre frames
-│   ├── 🎨 ui.py                  ← Interfaz: dibuja todo lo visual
-│   ├── 📷 capturas.py            ← Guarda fotos de rostros con fecha/hora
-│   ├── 📝 registro.py            ← Base de datos de nombres (persistente)
-│   ├── 📊 historial.py           ← Log CSV de presencia
-│   └── ⚙️  config.py              ← Configuración en un solo lugar
+├── src/                           CÓDIGO FUENTE
+│   ├── main.py                    → Punto de entrada (esto es lo que ejecutas)
+│   ├── detector.py                → Motor de IA: encuentra caras + genera huella
+│   ├── tracker.py                 → Seguimiento: sabe quién es quién entre frames
+│   ├── ui.py                      → Interfaz: dibuja recuadros, panel, reloj, HUD
+│   ├── capturas.py                → Guarda fotos de rostros con fecha/hora
+│   ├── registro.py                → Base de datos de nombres (persiste en disco)
+│   ├── historial.py               → Log CSV de quién estuvo y cuándo
+│   └── config.py                  → Toda la configuración en un solo lugar
 │
-├── 📁 datos/                      ← Se crea automáticamente
-│   ├── 📷 capturas/              ← Fotos de rostros (tecla C)
-│   ├── 📝 registro/              ← Nombres guardados (.pkl)
-│   ├── 📊 historial/             ← CSV de presencia
-│   └── 🎬 grabaciones/           ← Videos grabados (tecla G)
+├── datos/                         SE CREA AUTOMÁTICAMENTE
+│   ├── capturas/                  → Fotos guardadas con tecla C
+│   ├── registro/                  → Nombres que asignas (tecla N)
+│   ├── historial/                 → CSV: persona, entrada, salida, duración
+│   └── grabaciones/               → Videos con tecla G
 │
-├── 📋 requirements.txt            ← Dependencias (pip install -r)
-├── 🚫 .gitignore                  ← Archivos que git ignora
-└── 📖 README.md                   ← Este archivo
+├── requirements.txt               → Las 4 dependencias del proyecto
+├── .gitignore                     → Lo que git no sube
+└── README.md                      → Este archivo
 ```
 
 ---
 
-## Cómo funciona por dentro
+## 🔧 Instalación detallada
 
-### Arquitectura general
+### Requisitos previos
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              APLICACIÓN (main.py)                            │
-│                                                                             │
-│  ┌───────────────────────────────────────────────────────────────────────┐  │
-│  │                         PIPELINE DE PROCESAMIENTO                      │  │
-│  │                                                                       │  │
-│  │  ┌──────────┐    ┌──────────────┐    ┌────────────┐    ┌──────────┐  │  │
-│  │  │          │    │              │    │            │    │          │  │  │
-│  │  │  CÁMARA  │───►│  DETECTOR    │───►│  TRACKER   │───►│    UI    │  │  │
-│  │  │          │    │              │    │            │    │          │  │  │
-│  │  │ Captura  │    │ InsightFace  │    │ Asociación │    │ Dibujar  │  │  │
-│  │  │ frames   │    │ RetinaFace + │    │ espacial + │    │ interfaz │  │  │
-│  │  │ en vivo  │    │ ArcFace 512D │    │ embedding  │    │ completa │  │  │
-│  │  │          │    │ + edad/género│    │            │    │          │  │  │
-│  │  └──────────┘    └──────────────┘    └─────┬──────┘    └──────────┘  │  │
-│  │                                            │                          │  │
-│  └────────────────────────────────────────────┼──────────────────────────┘  │
-│                                               │                             │
-│  ┌────────────────────────────────────────────┼──────────────────────────┐  │
-│  │                        SERVICIOS DE DATOS  │                           │  │
-│  │                                            │                           │  │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌────┴─────────┐                │  │
-│  │  │              │  │              │  │              │                │  │
-│  │  │   REGISTRO   │  │  HISTORIAL   │  │   CAPTURAS   │                │  │
-│  │  │              │  │              │  │              │                │  │
-│  │  │ Nombres de   │  │ CSV con hora │  │ Fotos con    │                │  │
-│  │  │ personas     │  │ de entrada,  │  │ fecha y hora │                │  │
-│  │  │ guardados    │  │ salida y     │  │ de cada      │                │  │
-│  │  │ en disco     │  │ duración     │  │ rostro       │                │  │
-│  │  │ (.pkl)       │  │ (.csv)       │  │ (.jpg)       │                │  │
-│  │  │              │  │              │  │              │                │  │
-│  │  └──────────────┘  └──────────────┘  └──────────────┘                │  │
-│  │                                                                       │  │
-│  └───────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+| Necesitas | Por qué |
+|-----------|---------|
+| Python 3.9+ | El lenguaje. Probado con 3.11, 3.12, 3.14 |
+| Cámara web | Para capturar video en vivo |
+| Internet | Solo la primera vez (descarga modelo de 280MB) |
+
+### Paso 1: Instalar dependencias
+
+```bash
+pip install -r requirements.txt
 ```
 
-### Flujo de reconocimiento (lo que pasa en cada frame)
+<details>
+<summary><b>¿Qué instala exactamente?</b> (clic para expandir)</summary>
+<br>
 
-```
- FRAME DE CÁMARA
-       │
-       ▼
- ┌─────────────────────────────────────────────────────────────┐
- │  1. DETECCIÓN                                                │
- │                                                              │
- │  El modelo RetinaFace busca rostros en la imagen.            │
- │  Por cada rostro encontrado genera:                          │
- │    • Coordenadas (dónde está la cara)                        │
- │    • Embedding de 512 dimensiones (la "huella facial")       │
- │    • Edad estimada                                           │
- │    • Género estimado                                         │
- │    • Nivel de confianza                                      │
- └──────────────────────────┬──────────────────────────────────┘
-                            │
-                            ▼
- ┌─────────────────────────────────────────────────────────────┐
- │  2. TRACKING (Asociación)                                    │
- │                                                              │
- │  Para cada rostro detectado, el tracker decide:              │
- │                                                              │
- │  ¿Está CERCA de donde estaba alguien en el frame anterior?   │
- │        │                                                     │
- │        ├── SÍ ──► ¿Su huella facial coincide? ──► MISMA      │
- │        │                                          PERSONA    │
- │        │                                                     │
- │        └── NO ──► ¿Su huella coincide con alguien            │
- │                    que se fue hace poco? ──► REAPARECIÓ       │
- │                                                              │
- │  Si no coincide con nadie ──► PERSONA NUEVA (nuevo ID)       │
- └──────────────────────────┬──────────────────────────────────┘
-                            │
-                            ▼
- ┌─────────────────────────────────────────────────────────────┐
- │  3. RENDERIZADO                                              │
- │                                                              │
- │  Se dibuja sobre el frame:                                   │
- │    • Recuadro con color único por persona                    │
- │    • Nombre o ID                                             │
- │    • Edad y género                                           │
- │    • Panel lateral con miniaturas                            │
- │    • HUD con estadísticas                                    │
- │    • Reloj                                                   │
- │    • Alertas si aparece alguien nuevo                        │
- └─────────────────────────────────────────────────────────────┘
+| Paquete | Versión | Función | Tamaño aprox |
+|---------|---------|---------|:------------:|
+| `opencv-python` | ≥4.10 | Cámara, video, dibujar interfaz | ~40MB |
+| `insightface` | ≥1.0 | Detectar caras, generar huellas faciales, edad/género | ~1MB (+ modelo 280MB la 1ra vez) |
+| `onnxruntime` | ≥1.17 | Ejecutar modelos de IA eficientemente en CPU | ~15MB |
+| `numpy` | ≥1.26 | Cálculos numéricos (comparar vectores) | ~20MB |
+
+No necesita CMake. No necesita compilar. No necesita Visual Studio. Se instala directo.
+</details>
+
+### Paso 2: Ejecutar
+
+```bash
+python src/main.py
 ```
 
-### ¿Qué es la "huella facial"?
+### Opciones de ejecución
 
-Es un vector de **512 números** que representa matemáticamente la cara de una persona. Funciona como un DNI numérico del rostro:
-
+```bash
+python src/main.py --camera 1              # Usar segunda cámara
+python src/main.py --tema claro            # Interfaz clara
+python src/main.py --no-panel              # Sin panel lateral
+python src/main.py --ancho 1280 --alto 720 # Resolución HD
+python src/main.py --threshold 0.5         # Más exigente al diferenciar
+python src/main.py --help                  # Ver todas las opciones
 ```
-Persona A:  [0.12, -0.45, 0.78, 0.33, -0.91, ...]  (512 valores)
-Persona B:  [0.89, 0.23, -0.56, 0.11, 0.67, ...]   (512 valores)
-
-Similitud entre A y A (otra foto): 0.92  ← MUY parecidos = misma persona
-Similitud entre A y B:             0.15  ← MUY diferentes = personas distintas
-```
-
-El modelo ArcFace genera estos vectores de manera que dos fotos de la misma persona siempre producen vectores cercanos, sin importar si cambió de ángulo, expresión o iluminación.
 
 ---
 
-## Configuración
+## ⚙️ Configuración
 
-Si quieres ajustar el comportamiento, edita `src/config.py`. Los más importantes:
+Todo se ajusta editando `src/config.py`:
 
-| Qué ajustar | Variable | Default | Explicación |
-|---|---|---|---|
-| Sensibilidad de detección | `CONFIANZA_DETECCION` | 0.5 | Más bajo detecta más caras pero puede tener falsos positivos |
-| Diferenciación de personas | `UMBRAL_RECONOCIMIENTO` | 0.4 | Más alto = necesita más parecido para decir que es la misma persona |
-| Cuánto espera antes de olvidar | `FRAMES_PARA_PERDER` | 15 | Si alguien desaparece por 15 frames, lo da por ido |
-| Panel lateral | `MOSTRAR_PANEL` | True | Muestra/oculta el panel con miniaturas |
-| Edad y género | `MOSTRAR_GENERO_EDAD` | True | Muestra/oculta la estimación de edad/género |
-| Alertas | `ALERTA_PERSONA_NUEVA` | True | Aviso visual cuando aparece alguien nuevo |
+<div align="center">
+
+| Qué quieres cambiar | Variable | Valor actual | Qué hace |
+|:---------------------|:---------|:------------:|:---------|
+| Sensibilidad de detección | `CONFIANZA_DETECCION` | `0.5` | Más bajo = detecta más (pero puede haber falsos) |
+| Exigencia para reconocer | `UMBRAL_RECONOCIMIENTO` | `0.4` | Más alto = necesita más parecido para decir "es la misma persona" |
+| Tiempo antes de olvidar | `FRAMES_PARA_PERDER` | `15` | Si no ve a alguien por 15 frames, lo da por ido |
+| Panel lateral | `MOSTRAR_PANEL` | `True` | Muestra miniaturas de cada persona a la derecha |
+| Edad y género | `MOSTRAR_GENERO_EDAD` | `True` | Muestra estimación debajo del nombre |
+| Alerta persona nueva | `ALERTA_PERSONA_NUEVA` | `True` | Aviso rojo cuando aparece alguien que no conoce |
+| Detección en paralelo | `USAR_THREADING` | `True` | Detecta en un hilo separado para más fluidez |
+
+</div>
 
 ---
 
-## Preguntas frecuentes
+## 📊 Datos que genera
 
-**¿Necesito entorno virtual (venv)?**
-No es obligatorio. Las dependencias se instalan sin conflictos. Pero si prefieres aislarlo:
+### Historial de presencia (`datos/historial/historial_presencia.csv`)
+
+Cada vez que alguien aparece y desaparece de la cámara, se registra:
+
+```csv
+persona,entrada,salida,duracion_segundos,fecha
+Franklin,14:23:05,14:25:30,145.0,2026-07-27
+Persona_2,14:24:10,14:24:55,45.0,2026-07-27
 ```
+
+### Capturas (`datos/capturas/`)
+
+Cuando presionas `C`, guarda la cara recortada con nombre + fecha + hora en el nombre del archivo:
+
+```
+Franklin_2026-07-27_14-23-15.jpg
+Persona_2_2026-07-27_14-24-30.jpg
+```
+
+### Registro (`datos/registro/`)
+
+Cuando presionas `N` y le das un nombre a alguien, se guarda su huella facial en disco. La próxima vez que abras la app y esa persona aparezca, la reconoce sin que hagas nada.
+
+---
+
+## 🛠️ Tecnología
+
+<div align="center">
+
+| Capa | Tecnología | Modelo | Qué resuelve |
+|:----:|:-----------|:------:|:-------------|
+| Detección | InsightFace | RetinaFace | ¿Dónde están las caras en la imagen? |
+| Reconocimiento | InsightFace | ArcFace (512D) | ¿De quién es esta cara? |
+| Demografía | InsightFace | GenderAge | ¿Qué edad tiene? ¿Hombre o mujer? |
+| Inferencia | ONNX Runtime | CPU | Ejecutar los 3 modelos rápido sin GPU |
+| Video | OpenCV | — | Leer cámara, dibujar interfaz, grabar |
+| Tracking | Propio | — | Seguir personas entre frames |
+
+</div>
+
+> 📝 Todo corre en CPU. No necesitas tarjeta gráfica dedicada.
+
+---
+
+## ❓ Preguntas frecuentes
+
+<details>
+<summary><b>¿Necesito crear un entorno virtual (venv)?</b></summary>
+<br>
+No es obligatorio. Pero si quieres aislar las dependencias:
+
+```bash
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
+</details>
 
-**¿El requirements.txt es necesario?**
-Sí. Es la lista de dependencias del proyecto. Sin él tendrías que instalar cada paquete a mano.
+<details>
+<summary><b>¿Funciona sin internet?</b></summary>
+<br>
+Sí, después de la primera ejecución. El modelo se descarga una sola vez y queda en <code>~/.insightface/models/</code>.
+</details>
 
-**¿Funciona sin internet?**
-Sí, después de la primera ejecución. El modelo se descarga una sola vez y queda guardado.
+<details>
+<summary><b>¿Qué tan preciso es?</b></summary>
+<br>
+ArcFace tiene ~99.5% de precisión en el benchmark LFW. En la práctica diferencia bien entre personas distintas.
+</details>
 
-**¿Qué tan preciso es?**
-Usa el modelo ArcFace que tiene ~99.5% de precisión en benchmarks estándar. En la práctica funciona muy bien para diferenciar personas.
+<details>
+<summary><b>¿Puede reconocer a alguien solo con una foto?</b></summary>
+<br>
+No directamente. Está diseñado para cámara en vivo. Pero si registras a alguien con la tecla N, la próxima sesión lo reconoce automáticamente.
+</details>
 
-**¿Puede reconocer a alguien de una foto?**
-No directamente. Está diseñado para cámara en vivo. Pero puedes registrar a alguien (tecla N) y la próxima vez que aparezca lo reconoce.
+<details>
+<summary><b>¿Qué pasa si la cámara se desconecta?</b></summary>
+<br>
+La app intenta reconectar automáticamente hasta 3 veces antes de cerrarse.
+</details>
 
 ---
 
-## Tecnología que usa
+## 🚀 Posibles mejoras futuras
 
-El proyecto usa **InsightFace** con el modelo **buffalo_l**, que incluye:
+- [ ] Interfaz web (ver desde el navegador o celular)
+- [ ] Soporte GPU con `onnxruntime-gpu`
+- [ ] Múltiples cámaras simultáneas
+- [ ] Notificaciones por Telegram/Discord cuando aparece alguien
+- [ ] Exportar historial a Excel
+- [ ] Modo de solo detección (sin reconocimiento, más rápido)
 
-- **RetinaFace** para detectar dónde están las caras
-- **ArcFace** para generar la huella facial única de cada persona (512 dimensiones)
-- **GenderAge** para estimar edad y género
+---
 
-Todo corre en CPU con ONNX Runtime. No necesitas GPU ni tarjeta gráfica especial.
+<div align="center">
+
+**Hecho con Python, OpenCV e InsightFace**
+
+</div>

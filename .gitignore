@@ -1,63 +1,16 @@
-# ========================
 # Entorno virtual
-# ========================
 venv/
 .venv/
-env/
 
-# ========================
-# Python
-# ========================
+# Python (se genera al ejecutar)
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-*.egg-info/
-dist/
-build/
-*.egg
 
-# ========================
-# Datos generados por la app
-# ========================
+# Datos generados por la app (capturas, historial, registro, grabaciones)
 datos/
 
-# ========================
-# IDE y editores
-# ========================
-.vscode/
-.idea/
-*.code-workspace
-*.swp
-*.swo
-*~
-
-# ========================
-# Sistema operativo
-# ========================
-Thumbs.db
-Desktop.ini
-.DS_Store
-.Spotlight-V100
-.Trashes
-
-# ========================
-# Videos y multimedia
-# ========================
+# Videos grabados por la app
 *.avi
-*.mp4
-*.mkv
-*.mov
 
-# ========================
-# Logs
-# ========================
-*.log
-
-# ========================
-# Modelos de IA (se descargan automáticamente)
-# ========================
-*.onnx
-*.task
-*.caffemodel
-*.pb
+# Sistema operativo
+Thumbs.db
