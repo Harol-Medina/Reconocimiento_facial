@@ -128,63 +128,135 @@ datos/
 ```
 Reconocimiento_facial/
 │
-├── src/                    ← Todo el código
-│   ├── main.py            ← Punto de entrada (ejecuta esto)
-│   ├── detector.py        ← Detecta caras y genera la huella facial
-│   ├── tracker.py         ← Sigue a cada persona entre frames
-│   ├── ui.py              ← Dibuja la interfaz (recuadros, panel, HUD)
-│   ├── capturas.py        ← Guarda fotos de rostros con timestamp
-│   ├── registro.py        ← Guarda y busca nombres de personas
-│   ├── historial.py       ← Registra presencia en CSV
-│   └── config.py          ← Todas las configuraciones en un lugar
+├── 📁 src/                        ← Código fuente
+│   ├── 🚀 main.py                ← Punto de entrada (ejecuta esto)
+│   ├── 🧠 detector.py            ← Motor de IA: detecta caras + huella facial
+│   ├── 🔍 tracker.py             ← Seguimiento: sabe quién es quién entre frames
+│   ├── 🎨 ui.py                  ← Interfaz: dibuja todo lo visual
+│   ├── 📷 capturas.py            ← Guarda fotos de rostros con fecha/hora
+│   ├── 📝 registro.py            ← Base de datos de nombres (persistente)
+│   ├── 📊 historial.py           ← Log CSV de presencia
+│   └── ⚙️  config.py              ← Configuración en un solo lugar
 │
-├── datos/                  ← Se crea solo (capturas, registro, historial, videos)
-├── requirements.txt        ← Dependencias (lo que pip instala)
-├── .gitignore
-└── README.md
+├── 📁 datos/                      ← Se crea automáticamente
+│   ├── 📷 capturas/              ← Fotos de rostros (tecla C)
+│   ├── 📝 registro/              ← Nombres guardados (.pkl)
+│   ├── 📊 historial/             ← CSV de presencia
+│   └── 🎬 grabaciones/           ← Videos grabados (tecla G)
+│
+├── 📋 requirements.txt            ← Dependencias (pip install -r)
+├── 🚫 .gitignore                  ← Archivos que git ignora
+└── 📖 README.md                   ← Este archivo
 ```
 
 ---
 
 ## Cómo funciona por dentro
 
+### Arquitectura general
+
 ```
-                          ┌─────────────────┐
-  Cámara ──────────────► │   detector.py   │
-                          │                 │
-                          │ Detecta rostros │
-                          │ Genera huella   │
-                          │ facial de 512   │
-                          │ dimensiones     │
-                          └────────┬────────┘
-                                   │
-                                   ▼
-                          ┌─────────────────┐
-                          │   tracker.py    │
-                          │                 │
-                          │ Compara huellas │
-                          │ con personas    │
-                          │ que ya vio      │
-                          │                 │
-                          │ Si es nueva:    │
-                          │   crea ID nuevo │
-                          │ Si ya la vio:   │
-                          │   la reconoce   │
-                          └────────┬────────┘
-                                   │
-                    ┌──────────────┼──────────────┐
-                    ▼              ▼              ▼
-            ┌────────────┐ ┌────────────┐ ┌────────────┐
-            │ registro   │ │ historial  │ │   ui.py    │
-            │            │ │            │ │            │
-            │ Busca si   │ │ Anota hora │ │ Dibuja     │
-            │ tiene      │ │ entrada y  │ │ recuadros, │
-            │ nombre     │ │ salida en  │ │ panel,     │
-            │ guardado   │ │ CSV        │ │ reloj, HUD │
-            └────────────┘ └────────────┘ └────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              APLICACIÓN (main.py)                            │
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │                         PIPELINE DE PROCESAMIENTO                      │  │
+│  │                                                                       │  │
+│  │  ┌──────────┐    ┌──────────────┐    ┌────────────┐    ┌──────────┐  │  │
+│  │  │          │    │              │    │            │    │          │  │  │
+│  │  │  CÁMARA  │───►│  DETECTOR    │───►│  TRACKER   │───►│    UI    │  │  │
+│  │  │          │    │              │    │            │    │          │  │  │
+│  │  │ Captura  │    │ InsightFace  │    │ Asociación │    │ Dibujar  │  │  │
+│  │  │ frames   │    │ RetinaFace + │    │ espacial + │    │ interfaz │  │  │
+│  │  │ en vivo  │    │ ArcFace 512D │    │ embedding  │    │ completa │  │  │
+│  │  │          │    │ + edad/género│    │            │    │          │  │  │
+│  │  └──────────┘    └──────────────┘    └─────┬──────┘    └──────────┘  │  │
+│  │                                            │                          │  │
+│  └────────────────────────────────────────────┼──────────────────────────┘  │
+│                                               │                             │
+│  ┌────────────────────────────────────────────┼──────────────────────────┐  │
+│  │                        SERVICIOS DE DATOS  │                           │  │
+│  │                                            │                           │  │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌────┴─────────┐                │  │
+│  │  │              │  │              │  │              │                │  │
+│  │  │   REGISTRO   │  │  HISTORIAL   │  │   CAPTURAS   │                │  │
+│  │  │              │  │              │  │              │                │  │
+│  │  │ Nombres de   │  │ CSV con hora │  │ Fotos con    │                │  │
+│  │  │ personas     │  │ de entrada,  │  │ fecha y hora │                │  │
+│  │  │ guardados    │  │ salida y     │  │ de cada      │                │  │
+│  │  │ en disco     │  │ duración     │  │ rostro       │                │  │
+│  │  │ (.pkl)       │  │ (.csv)       │  │ (.jpg)       │                │  │
+│  │  │              │  │              │  │              │                │  │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘                │  │
+│  │                                                                       │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-La "huella facial" (embedding) es un vector de 512 números que representa la cara de una persona. Es como un DNI matemático del rostro. Dos fotos de la misma persona generan vectores muy parecidos, mientras que personas distintas generan vectores muy diferentes.
+### Flujo de reconocimiento (lo que pasa en cada frame)
+
+```
+ FRAME DE CÁMARA
+       │
+       ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │  1. DETECCIÓN                                                │
+ │                                                              │
+ │  El modelo RetinaFace busca rostros en la imagen.            │
+ │  Por cada rostro encontrado genera:                          │
+ │    • Coordenadas (dónde está la cara)                        │
+ │    • Embedding de 512 dimensiones (la "huella facial")       │
+ │    • Edad estimada                                           │
+ │    • Género estimado                                         │
+ │    • Nivel de confianza                                      │
+ └──────────────────────────┬──────────────────────────────────┘
+                            │
+                            ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │  2. TRACKING (Asociación)                                    │
+ │                                                              │
+ │  Para cada rostro detectado, el tracker decide:              │
+ │                                                              │
+ │  ¿Está CERCA de donde estaba alguien en el frame anterior?   │
+ │        │                                                     │
+ │        ├── SÍ ──► ¿Su huella facial coincide? ──► MISMA      │
+ │        │                                          PERSONA    │
+ │        │                                                     │
+ │        └── NO ──► ¿Su huella coincide con alguien            │
+ │                    que se fue hace poco? ──► REAPARECIÓ       │
+ │                                                              │
+ │  Si no coincide con nadie ──► PERSONA NUEVA (nuevo ID)       │
+ └──────────────────────────┬──────────────────────────────────┘
+                            │
+                            ▼
+ ┌─────────────────────────────────────────────────────────────┐
+ │  3. RENDERIZADO                                              │
+ │                                                              │
+ │  Se dibuja sobre el frame:                                   │
+ │    • Recuadro con color único por persona                    │
+ │    • Nombre o ID                                             │
+ │    • Edad y género                                           │
+ │    • Panel lateral con miniaturas                            │
+ │    • HUD con estadísticas                                    │
+ │    • Reloj                                                   │
+ │    • Alertas si aparece alguien nuevo                        │
+ └─────────────────────────────────────────────────────────────┘
+```
+
+### ¿Qué es la "huella facial"?
+
+Es un vector de **512 números** que representa matemáticamente la cara de una persona. Funciona como un DNI numérico del rostro:
+
+```
+Persona A:  [0.12, -0.45, 0.78, 0.33, -0.91, ...]  (512 valores)
+Persona B:  [0.89, 0.23, -0.56, 0.11, 0.67, ...]   (512 valores)
+
+Similitud entre A y A (otra foto): 0.92  ← MUY parecidos = misma persona
+Similitud entre A y B:             0.15  ← MUY diferentes = personas distintas
+```
+
+El modelo ArcFace genera estos vectores de manera que dos fotos de la misma persona siempre producen vectores cercanos, sin importar si cambió de ángulo, expresión o iluminación.
 
 ---
 
